@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Button from './Button';
+import Button from '@mui/material/Button';
 const Card = styled.div`
   background-color: #fff;
   border-radius: 8px;
@@ -29,7 +29,9 @@ const BlockCard = ({ block, getTransactions }) => {
       <Text>Block Timestamp: {block.timestamp}</Text>
       <Text>Block Miner: {block.miner}</Text>
       <Text>Number of Transactions in Block: {block.transactions.length}</Text>
-      <Button onClick={getTransactions}>Get Block Transactions</Button>
+      <Button variant="contained" onClick={getTransactions}>
+        Get Block Transactions
+      </Button>
     </Card>
   );
 };

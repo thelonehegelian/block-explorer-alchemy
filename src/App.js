@@ -1,11 +1,11 @@
 import { Alchemy, Network } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import BlockCard from './components/Block';
-import Button from './components/Button';
-import Paginate from './components/Paginate';
 import Layout from './components/Layout';
-
+import Button from '@mui/material/Button';
 import './App.css';
+import TransactionDetails from './components/TxDetails';
+import Paginate from './components/Paginate';
 
 // Refer to the README doc for more information about using API
 // keys in client-side code. You should never do this in production
@@ -50,7 +50,6 @@ function App() {
     };
     const tx = await alchemy.core.getTransactionReceipts(params);
     setTransactions(tx.receipts);
-    console.log(tx.receipts);
   };
 
   const getLatestBlock = async () => {
@@ -65,13 +64,25 @@ function App() {
   return (
     <>
       <Layout>
-        <Button style={{ width: '400px' }} onClick={getLatestBlock}>
+        <Button
+          variant="contained"
+          style={{ width: '400px' }}
+          onClick={getLatestBlock}
+        >
           Get Latest Block
         </Button>
         {block && (
           <BlockCard block={block} getTransactions={handleGetTransactions} />
         )}
-        <Paginate data={transactions} />
+        <h3>
+          Transactions in Block{' '}
+          {transactions.length === 0
+            ? ''
+            : `${parseInt(transactions[0].blockNumber)}`}
+        </h3>
+        {transactions.map((tx, idx) => (
+          <TransactionDetails key={idx} txData={tx} />
+        ))}
       </Layout>
     </>
   );
