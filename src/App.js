@@ -2,6 +2,8 @@ import { Alchemy, Network } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import BlockCard from './components/Block';
 import Button from './components/Button';
+import Paginate from './components/Paginate';
+import Layout from './components/Layout';
 
 import './App.css';
 
@@ -50,12 +52,19 @@ function App() {
     console.log(tx.receipts);
   };
 
+  const getLatestBlock = async () => {};
+
   return (
     <>
-      <div className="App">Block Number: {blockNumber}</div>
-      {block && (
-        <BlockCard block={block} getTransactions={handleGetTransactions} />
-      )}
+      <Layout>
+        <Button style={{ width: '400px' }} onClick={getLatestBlock}>
+          Get Latest Block
+        </Button>
+        {block && (
+          <BlockCard block={block} getTransactions={handleGetTransactions} />
+        )}
+        <Paginate data={transactions} />
+      </Layout>
     </>
   );
 }

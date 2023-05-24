@@ -21,7 +21,10 @@ const Text = styled.p`
 const BlockCard = ({ block, getTransactions }) => {
   return (
     <Card>
-      <Title>Block Hash: {block.hash}</Title>
+      <Title>
+        Block Hash: {`${block.hash.slice(0, 6)}...${block.hash.slice(-4)}`}
+      </Title>
+
       <Text>Block Number: {block.number}</Text>
       <Text>Block Timestamp: {block.timestamp}</Text>
       <Text>Block Miner: {block.miner}</Text>
