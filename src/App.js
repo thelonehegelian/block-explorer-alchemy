@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import './App.css';
 import TransactionDetails from './components/TxDetails';
 import Paginate from './components/Paginate';
+import Alert from '@mui/material/Alert';
 
 // Refer to the README doc for more information about using API
 // keys in client-side code. You should never do this in production
@@ -27,21 +28,37 @@ function App() {
   const [block, setBlock] = useState();
   const [transactions, setTransactions] = useState([]);
   const [blockTimer, setBlockTimer] = useState(12);
+  const [currentGasPrice, setCurrentGasPrice] = useState({});
 
   useEffect(() => {
-    // async function getBlockNumber() {
-    //   setBlockNumber(await alchemy.core.getBlockNumber());
-    // }
-
+    let isMounted = true;
     async function getBlock() {
-      const block = await alchemy.core.getBlock(17325010);
+      const block = await alchemy.core.getBlock();
       setBlock(block);
     }
 
-    // getBlockNumber();
     getBlock();
+    return () => {
+      isMounted = false; // Mark component as unmounted in cleanup function
+    };
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+    async function getGasPrice() {
+      const gasPrice = await alchemy.core.getGasPrice();
+      setCurrentGasPrice(gasPrice);
+    }
+
+    const interval = setInterval(() => {
+      getGasPrice();
+    }, 1000); // Update gas price every 1 second
+
+    return () => {
+      isMounted = false; // Mark component as unmounted in cleanup function
+      clearInterval(interval);
+    };
+  }, []);
   const handleGetTransactions = async () => {
     const params = {
       // blockNumber
@@ -64,21 +81,22 @@ function App() {
   return (
     <>
       <Layout>
-        <Button
-          variant="contained"
-          style={{ width: '400px' }}
-          onClick={getLatestBlock}
-        >
-          Get Latest Block
-        </Button>
+        <Alert severity="info">
+          Current Gas Price: {parseInt(currentGasPrice._hex)}
+        </Alert>
         {block && (
-          <BlockCard block={block} getTransactions={handleGetTransactions} />
+          <BlockCard
+            block={block}
+            getTransactions={handleGetTransactions}
+            getLatestBlock={getLatestBlock}
+          />
         )}
         <h3>
-          Transactions in Block{' '}
           {transactions.length === 0
             ? ''
-            : `${parseInt(transactions[0].blockNumber)}`}
+            : `${transactions.length} transactions in Block ${parseInt(
+                transactions[0].blockNumber
+              )}`}
         </h3>
         {transactions.map((tx, idx) => (
           <TransactionDetails key={idx} txData={tx} />

@@ -18,9 +18,16 @@ const Text = styled.p`
   margin-bottom: 4px;
 `;
 
-const BlockCard = ({ block, getTransactions }) => {
+const BlockCard = ({ block, getTransactions, getLatestBlock }) => {
   return (
-    <Card>
+    <Card style={{ padding: '30px' }}>
+      <Button
+        variant="contained"
+        style={{ width: '400px' }}
+        onClick={getLatestBlock}
+      >
+        Get Latest Block
+      </Button>
       <Title>
         Block Hash: {`${block.hash.slice(0, 6)}...${block.hash.slice(-4)}`}
       </Title>
@@ -29,7 +36,11 @@ const BlockCard = ({ block, getTransactions }) => {
       <Text>Block Timestamp: {block.timestamp}</Text>
       <Text>Block Miner: {block.miner}</Text>
       <Text>Number of Transactions in Block: {block.transactions.length}</Text>
-      <Button variant="contained" onClick={getTransactions}>
+      <Button
+        variant="contained"
+        onClick={getTransactions}
+        style={{ width: '400px' }}
+      >
         Get Block Transactions
       </Button>
     </Card>

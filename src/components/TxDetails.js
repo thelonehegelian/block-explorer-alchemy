@@ -20,37 +20,35 @@ export default function Tx({ txData }) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
+          <Typography>Block Hash: {txData.blockHash}</Typography>
+          <Typography>Block Number: {txData.blockNumber}</Typography>
+          {!txData.contractAddress ? (
+            ''
+          ) : (
+            <Typography>
+              {txData.contractAddress}
+              <Badge
+                badgeContent={'contract'}
+                color="success"
+                style={{ paddingLeft: '40px' }}
+              />
+            </Typography>
+          )}
+          <Typography>From: {txData.from}</Typography>
+          <Typography>To: {txData.to}</Typography>
           <Typography>
-            <p>Block Hash: {txData.blockHash}</p>
-            <p>Block Number: {txData.blockNumber}</p>
-            {!txData.contractAddress ? (
-              ''
+            Status:
+            {txData.status ? (
+              <Badge
+                badgeContent={'success'}
+                color="success"
+                style={{ paddingLeft: '40px' }}
+              />
             ) : (
-              <p>
-                {txData.contractAddress}
-                <Badge
-                  badgeContent={'contract'}
-                  color="success"
-                  style={{ paddingLeft: '40px' }}
-                />
-              </p>
+              ''
             )}
-            <p>From: {txData.from}</p>
-            <p>To: {txData.to}</p>
-            <p>
-              Status:
-              {txData.status ? (
-                <Badge
-                  badgeContent={'success'}
-                  color="success"
-                  style={{ paddingLeft: '40px' }}
-                />
-              ) : (
-                ''
-              )}
-            </p>
-            <p>Gas used: {parseInt(txData.gasUsed)}</p>
           </Typography>
+          <Typography>Gas used: {parseInt(txData.gasUsed)}</Typography>
         </AccordionDetails>
       </Accordion>
     </div>
