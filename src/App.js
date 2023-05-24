@@ -5,7 +5,7 @@ import Layout from './components/Layout';
 import Button from '@mui/material/Button';
 import './App.css';
 import TransactionDetails from './components/TxDetails';
-import Paginate from './components/Paginate';
+import { Pagination } from '@mui/material';
 import Alert from '@mui/material/Alert';
 
 // Refer to the README doc for more information about using API
@@ -29,6 +29,16 @@ function App() {
   const [transactions, setTransactions] = useState([]);
   const [blockTimer, setBlockTimer] = useState(12);
   const [currentGasPrice, setCurrentGasPrice] = useState({});
+  const [page, setPage] = useState(1);
+
+  // calculate start and end indices
+  const itemsPerPage = 10;
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = page * itemsPerPage;
+
+  const paginatedItems = transactions
+    ? transactions.slice(startIndex, endIndex)
+    : transactions;
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +49,7 @@ function App() {
 
     getBlock();
     return () => {
-      isMounted = false; // Mark component as unmounted in cleanup function
+      isMounted = false;
     };
   }, []);
 
@@ -98,9 +108,17 @@ function App() {
                 transactions[0].blockNumber
               )}`}
         </h3>
-        {transactions.map((tx, idx) => (
+        {paginatedItems.map((tx, idx) => (
           <TransactionDetails key={idx} txData={tx} />
         ))}
+
+        <Pagination
+          count={Math.ceil(transactions.length / itemsPerPage)}
+          page={page}
+          onChange={(event, page) => setPage(page)}
+        />
+
+       
       </Layout>
     </>
   );
