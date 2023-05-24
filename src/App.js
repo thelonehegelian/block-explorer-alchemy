@@ -26,6 +26,7 @@ function App() {
   const [blockNumber, setBlockNumber] = useState();
   const [block, setBlock] = useState();
   const [transactions, setTransactions] = useState([]);
+  const [blockTimer, setBlockTimer] = useState(12);
 
   useEffect(() => {
     // async function getBlockNumber() {
@@ -52,7 +53,14 @@ function App() {
     console.log(tx.receipts);
   };
 
-  const getLatestBlock = async () => {};
+  const getLatestBlock = async () => {
+    const block = await alchemy.core.getBlock();
+    setBlock(block);
+    // @todo add block timer to disable the button for 12 seconds
+    // const timer = setInterval(() => {
+    //   setBlockTimer((blockTimer) => blockTimer - 1);
+    // }, 1000);
+  };
 
   return (
     <>
