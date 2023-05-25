@@ -1,12 +1,15 @@
-import { Alchemy, Network } from 'alchemy-sdk';
+import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import BlockCard from './components/Block';
-import Layout from './components/Layout';
-import Button from '@mui/material/Button';
 import './App.css';
 import TransactionDetails from './components/TxDetails';
 import { Pagination } from '@mui/material';
 import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
+import Input from './components/Input';
+import Typography from '@mui/material/Typography';
+
 
 // Refer to the README doc for more information about using API
 // keys in client-side code. You should never do this in production
@@ -30,6 +33,10 @@ function App() {
   const [blockTimer, setBlockTimer] = useState(12);
   const [currentGasPrice, setCurrentGasPrice] = useState({});
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [addressBalance, setAddressBalance] = useState(null);
+
+
 
   // calculate start and end indices
   const itemsPerPage = 10;
@@ -79,6 +86,18 @@ function App() {
     setTransactions(tx.receipts);
   };
 
+
+  const getAddressBalance = async () => {
+    const balance = await alchemy.core.getBalance(search);
+    console.log(parseInt(balance._hex));
+    setAddressBalance(parseInt(balance._hex));
+  }
+  
+  const handleAddressFunction = (e) => {
+    console.log(e.target.value)
+    setSearch(e.target.value);
+  };
+
   const getLatestBlock = async () => {
     const block = await alchemy.core.getBlock();
     setBlock(block);
@@ -90,7 +109,9 @@ function App() {
 
   return (
     <>
-      <Layout>
+      <Box sx={{ width: '100%' }}>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid xs={6}>
         <Alert severity="info">
           Current Gas Price: {parseInt(currentGasPrice._hex)}
         </Alert>
@@ -117,9 +138,13 @@ function App() {
           page={page}
           onChange={(event, page) => setPage(page)}
         />
-
-       
-      </Layout>
+  </Grid>
+  <Grid>
+   <Input label = {"Get Address Balance"} onChange = {handleAddressFunction} getAddressBalance={ getAddressBalance}/>
+   {addressBalance === null ? "" : <><p style={{fontWeight: "bold"}}>Balance of {search}</p> <Typography>{addressBalance} WEI</Typography></>}
+  </Grid>
+       </Grid>
+      </Box>
     </>
   );
 }

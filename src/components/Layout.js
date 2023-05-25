@@ -8,6 +8,7 @@ const Layout = styled.div`
   min-height: 100vh;
   padding: 24px;
   width: 100%;
+  
 `;
 
 export default Layout;
